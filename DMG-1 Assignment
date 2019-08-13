@@ -1,0 +1,369 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Apr 12 18:31:58 2019
+
+@author: Sravani
+"""
+
+#Problem:1
+'''1.a.IRIS: Draw histograms of each of the four dimensions irrespective of class label'''
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+from scipy.stats import norm
+from sklearn.preprocessing import StandardScaler
+from scipy import stats
+import warnings
+warnings.filterwarnings('ignore')
+
+x=pd.read_csv("C:/Users/Sravani/Documents/ISB/Data Mining-1/Assignment_unsupervised learning/data/iris-species/Iris.csv")
+x.head()
+x.describe()
+
+plt.hist(x.SepalLengthCm, bins=20)
+plt.show()
+
+'''IRIS: Draw histograms each dimension for each class separately'''
+#Chnage the code
+import matplotlib.pyplot as plt
+from sklearn import datasets
+iris= datasets.load_iris()
+
+fig, axes = plt.subplots(nrows= 2, ncols=2)
+colors= ['blue', 'red', 'green']
+
+for i, ax in enumerate(axes.flat):
+    for label, color in zip(range(len(iris.target_names)), colors):
+        ax.hist(iris.data[iris.target==label, i], label=             
+                            iris.target_names[label], color=color)
+        ax.set_xlabel(iris.feature_names[i])  
+        ax.legend(loc='upper right')
+plt.show()
+
+'''2nd Question
+BASON/Histogramns
+Draw histograms for each'''
+HB=pd.read_csv("C:/Users/Sravani/Documents/ISB/Data Mining-1/Assignment_unsupervised learning/hb/training/training.csv")
+HB.head()
+HB.describe()
+HB_DF=pd.DataFrame(data=HB)
+HB_DF
+
+
+f, axes = plt.subplots(10, 2, figsize=(7, 7), sharex=True)
+sns.distplot( HB_DF["DER_mass_MMC"] , color="skyblue", ax=axes[0, 0])
+sns.distplot( HB_DF["DER_mass_transverse_met_lep"] , color="olive", ax=axes[0, 1])
+sns.distplot( HB_DF["DER_mass_vis"] , color="gold", ax=axes[1, 0])
+sns.distplot( HB_DF["DER_pt_h"] , color="teal", ax=axes[1, 1])
+
+sns.distplot( HB_DF["DER_deltaeta_jet_jet"] , color="skyblue", ax=axes[2, 0])
+sns.distplot( HB_DF["DER_mass_jet_jet"] , color="olive", ax=axes[2, 1])
+sns.distplot( HB_DF["DER_prodeta_jet_jet"] , color="gold", ax=axes[3, 0])
+sns.distplot( HB_DF["DER_deltar_tau_lep"] , color="teal", ax=axes[3, 1])
+
+sns.distplot( HB_DF["DER_pt_tot"] , color="skyblue", ax=axes[4, 0])
+sns.distplot( HB_DF["PRI_met_sumet"] , color="olive", ax=axes[4, 1])
+sns.distplot( HB_DF["PRI_jet_num"] , color="gold", ax=axes[5, 0])
+sns.distplot( HB_DF["PRI_jet_leading_pt"] , color="teal", ax=axes[5, 1])
+
+sns.distplot( HB_DF["PRI_jet_leading_eta"] , color="skyblue", ax=axes[6, 0])
+sns.distplot( HB_DF["PRI_jet_leading_phi"] , color="olive", ax=axes[6, 1])
+sns.distplot( HB_DF["PRI_jet_subleading_pt"] , color="gold", ax=axes[7, 0])
+sns.distplot( HB_DF["PRI_jet_subleading_eta"] , color="teal", ax=axes[7, 1])
+
+
+sns.distplot( HB_DF["PRI_jet_subleading_phi"] , color="skyblue", ax=axes[8, 0])
+sns.distplot( HB_DF["PRI_jet_all_pt"] , color="olive", ax=axes[8, 1])
+sns.distplot( HB_DF["Weight"] , color="gold", ax=axes[9, 0])
+
+f, axes = plt.subplots(2, 2, figsize=(7, 7), sharex=True)
+sns.distplot( HB_DF["DER_mass_MMC"] , color="skyblue", ax=axes[0, 0])
+sns.distplot( HB_DF["DER_mass_transverse_met_lep"] , color="olive", ax=axes[0, 1])
+sns.distplot( HB_DF["DER_mass_vis"] , color="gold", ax=axes[1, 0])
+sns.distplot( HB_DF["DER_pt_h"] , color="teal", ax=axes[1, 1])
+
+'''2. b.BOSON: Draw histograms of each of the 30 dimensions for each of the two classes
+'''
+
+f, axes = plt.subplots(2, 2, figsize=(7, 7), sharex=True)
+HB_DF.groupby("Label").DER_mass_MMC.hist(alpha=0.4, ax=axes[0, 0])
+HB_DF.groupby("Label").DER_mass_transverse_met_lep.hist(alpha=0.4, ax=axes[0, 1])
+HB_DF.groupby("Label").DER_mass_vis.hist(alpha=0.4, ax=axes[1, 0])
+HB_DF.groupby("Label").DER_pt_h.hist(alpha=0.4, ax=axes[1, 1])
+
+'''3.a: Draw the scatterplots of the 4 choose 2 pairs of dimensions'''
+
+'''Creating a feature Matrix and y variable'''
+x.head()
+X=x.iloc[:,1]
+X
+y=x.iloc[:,-1]
+y
+from sklearn import preprocessing
+le_y= preprocessing.LabelEncoder()
+Y=le_y.fit_transform(y)
+Y
+
+plt.scatter(x.iloc[:,1], Y)#draw all four
+plt.scatter(x.iloc[:,1], x.iloc[:,2])#draw all four
+plt.scatter(x.iloc[:,1], x.iloc[:,3])#draw all four
+plt.scatter(x.iloc[:,1], x.iloc[:,4])#draw all four
+plt.scatter(x.iloc[:,2], x.iloc[:,3])#draw all four
+plt.scatter(x.iloc[:,2], x.iloc[:,4])#draw all four
+plt.scatter(x.iloc[:,2], x.iloc[:,5])#draw all four
+plt.scatter(x.iloc[:,3], x.iloc[:,4])#draw all four
+plt.scatter(x.iloc[:,3], x.iloc[:,5])#draw all four
+
+
+#also working
+OneHotEncoder=preprocessing.OneHotEncoder()
+fittedX=OneHotEncoder.fit_transform(X).toarray()
+fittedX
+'''le = '''
+label=['Iris-setosa','Iris-versicolor','Iris-virginica']
+#colors = ['red','green','blue']
+xy = np.zeros((2, 150))
+colors = [int(i % 23) for i in xy[0]]
+fig = plt.figure(figsize=(8,8))
+plt.scatter(x.iloc[:,1], x.iloc[:,2],cmap=plt.cm.Paired, c=Y)
+
+cb = plt.colorbar()
+loc = np.arange(0,max(label),max(label)/float(len(colors)))
+cb.set_ticks(loc)
+cb.set_ticklabels(colors)
+
+
+'''4.B. Now take two such dimensions and draw a scatterplot between them '''
+OneHotEncoder=preprocessing.OneHotEncoder()
+fittedHB_DF=OneHotEncoder.fit_transform(HB_DF['DER_mass_transverse_met_lep']).toarray()
+HB_DF["DER_mass_transverse_met_lep"].apply(np.log).hist()
+df["ibu"].apply(np.log).hist()
+plt.show()
+#not working
+HB_DF['log_value'] = np.log(HB_DF["DER_mass_transverse_met_lep"])
+plt.hist(HB_DF['log_value'])
+HB_DF['log_value']
+plt.hist(HB_DF[np.isfinite(HB_DF['log_value'])].values)
+
+#log 
+HB_DF['log_value'] = np.log(HB_DF["DER_mass_MMC"])
+plt.hist(HB_DF['log_value'])
+HB_DF['log_value']
+plt.hist(HB_DF[np.isfinite(HB_DF['log_value'])].values)
+
+
+'''5.A. We will do 2-D PCA projection of EACH class separately.'''
+digits=pd.read_csv("C:/Users/Sravani/Documents/ISB/Data Mining-1/Assignment_unsupervised learning/digits/train.csv")
+digits.head()
+featureMat=digits.iloc[:,1:785]
+featureMat
+y=digits.iloc[:,0]
+y
+#feature scaling
+from sklearn.preprocessing import StandardScaler
+sc=StandardScaler()
+featureMat_stand=sc.fit_transform(featureMat)
+featureMat_stand
+
+#Applying PCA
+from sklearn.decomposition import PCA
+pca=PCA(n_components=2)
+FMpca=pca.fit_transform(featureMat_stand)
+#checking the varience explained
+explained_var=pca.explained_variance_ratio_
+
+#the above explained most of the varience.
+#Now we can take first two PCA values as it's explain most of vaience
+#FMPCA have 2 components now
+
+from sklearn.linear_model import LogisticRegression
+classifier=LogisticRegression(random_state=0)
+classifier.fit(FMpca, y)
+
+#making of Confusion matrix to evaluate the model for accuracy (TBD in future using test and train)
+#from sklearn.metrics import confusion_matrix
+from matplotlib.colors import ListedColormap
+x_set, y_set=FMpca, y
+x1,x2=np.meshgrid(np.arange(start=x_set[:,0].min()-1,stop=x_set[:,0].min()+1), step=0.01),
+(np.arange(start=x_set[:,1].min()-1,stop=x_set[:,1].min()+1, step=0.01))
+
+#changing code as meshgrid isn't working
+#below code worked well for Visualization of digits data
+fig, ax = plt.subplots(1, 2, figsize=(15,8))
+ax[0].scatter(FMpca[:,0], FMpca[:,1], c=y, cmap=plt.cm.Paired)
+ax[0].set_title('Clusters reduced to 2D with PCA', fontsize=10)
+
+ax[1].scatter(FMpca[:,0], FMpca[:,1], c=y, cmap=plt.cm.Paired)
+ax[1].set_title('Original Dataset reduced to 2D with PCA', fontsize=10)
+plt.show()
+#5.c:
+    #tried alot 5.2
+label=['0','1','2','3', '4', '5', '6', '7', '8', '9']
+#colors = ['red','green','blue']
+xy = np.zeros((2, 150))
+colors = [int(i % 23) for i in xy[0]]
+fig = plt.figure(figsize=(8,8))
+numberlab=digits.iloc[:,0]
+df=pd.DataFrame(numberlab)
+df.groupby(label='0')
+plt.scatter(FMpca[:,0],FMpca[:,1],cmap=plt.cm.Paired, label='9')
+cb = plt.colorbar()
+loc = np.arange(0,max(label),max(label)/float(len(colors)))
+cb.set_ticks(loc)
+cb.set_ticklabels(colors)
+plt.scatter(digits.iloc[:,1],digits.iloc[:,0] )
+
+k_digits = KMeans(n_clusters=10)
+y_pred = k_digits.fit_predict(X)
+
+# Let's check the parameter cluster centers of the estimator
+print(k_digits.cluster_centers_.shape)
+
+'''6.a'''
+'''Converting Raw data to 30 Dimensional data, solution is just pca=30'''
+#Applying PCA
+from sklearn.decomposition import PCA
+pca=PCA(n_components=30)
+FMpca=pca.fit_transform(featureMat_stand)
+#checking the varience explained
+explained_var=pca.explained_variance_ratio_
+FM_df=pd.DataFrame(FMpca)
+
+'''Projecting 30 Dimensional PCA'''
+
+plt.scatter(FM_df.iloc[:,1],y)#top 30 do it for all indices
+#clustering
+# import KMeans
+FeatureMatrix=digits.iloc[:,1:785]
+FeatureMatrix
+y_label=digits.iloc[:,0]
+y_label
+
+y_label_df=pd.DataFrame(y_label)
+
+zero=y_label_df.loc[y_label_df['label'] == 0]
+one=y_label_df.loc[y_label_df['label'] == 1]
+two=y_label_df.loc[y_label_df['label'] == 2]
+three=y_label_df.loc[y_label_df['label'] == 3]
+four=y_label_df.loc[y_label_df['label'] == 4]
+five=y_label_df.loc[y_label_df['label'] == 5]
+six=y_label_df.loc[y_label_df['label'] == 6]
+seven=y_label_df.loc[y_label_df['label'] == 7]
+eight=y_label_df.loc[y_label_df['label'] == 8]
+nine=y_label_df.loc[y_label_df['label'] == 9]
+
+from sklearn.cluster import KMeans
+DIGITS_PCA_30 = KMeans(n_clusters=10)
+zeroPCA=DIGITS_PCA_30.fit(zero)
+print(DIGITS_PCA_30.cluster_centers_)
+DIGITS_PCA_30_Predict = DIGITS_PCA_30.fit_predict(zero)
+print(DIGITS_PCA_30.cluster_centers_.shape)
+
+DIGITS_PCA_30 = KMeans(n_clusters=10)
+onePCA=DIGITS_PCA_30.fit(one)
+print(DIGITS_PCA_30.cluster_centers_)
+DIGITS_PCA_30_Predict = DIGITS_PCA_30.fit_predict(one)
+print(DIGITS_PCA_30.cluster_centers_.shape)
+...#so on UNTILL 9
+'''DO 5th AND 6TH'''
+
+'''7th Question'''
+import numpy as np 
+import pandas as pd 
+import matplotlib.pyplot as plt 
+from pandas import DataFrame 
+from sklearn.mixture import GaussianMixture 
+
+iris=pd.read_csv("C:/Users/Sravani/Documents/ISB/Data Mining-1/Assignment_unsupervised learning/data/iris-species/Iris.csv")
+
+iris.head()
+iris_df=pd.DataFrame(iris)
+slsw_df=iris_df.iloc[:,1:3]
+slsw_df
+
+plt.scatter(slsw_df.iloc[:,0],slsw_df.iloc[:,1])
+
+
+gmm= GaussianMixture(n_components = 3)
+gmm.fit(slsw_df)
+
+Label=gmm.predict(slsw_df)
+slsw_df['Label']= Label
+d0 = slsw_df[slsw_df['Label']== 0] 
+d1 = slsw_df[slsw_df['Label']== 1] 
+d2 = slsw_df[slsw_df['Label']== 2] 
+d0 
+# plot three clusters in same plot 
+plt.scatter(d0['SepalLengthCm'], d0['SepalWidthCm'], c ='r') 
+plt.scatter(d1['SepalLengthCm'], d1['SepalWidthCm'], c ='yellow') 
+plt.scatter(d2['SepalLengthCm'], d2['SepalWidthCm'], c ='g') 
+
+
+
+# print the converged log-likelihood value 
+print(gmm.lower_bound_) 
+
+# print the number of iterations needed 
+# for the log-likelihood value to converge 
+print(gmm.n_iter_)
+
+'''for Petal length and Petal width'''
+
+plpw_df=iris_df.iloc[:,3:5]
+plpw_df
+
+plt.scatter(plpw_df.iloc[:,0],plpw_df.iloc[:,1])
+
+
+gmm= GaussianMixture(n_components = 3)
+gmm.fit(plpw_df)
+
+Label=gmm.predict(plpw_df)
+plpw_df['Label']= Label
+d0 = plpw_df[plpw_df['Label']== 0] 
+d1 = plpw_df[plpw_df['Label']== 1] 
+d2 = plpw_df[plpw_df['Label']== 2] 
+d0 
+# plot three clusters in same plot 
+plt.scatter(d0['PetalLengthCm'], d0['PetalWidthCm'], c ='r') 
+plt.scatter(d1['PetalLengthCm'], d1['PetalWidthCm'], c ='yellow') 
+plt.scatter(d2['PetalLengthCm'], d2['PetalWidthCm'], c ='g') 
+
+
+
+# print the converged log-likelihood value 
+print(gmm.lower_bound_) 
+
+# print the number of iterations needed 
+# for the log-likelihood value to converge 
+print(gmm.n_iter_)
+
+'''8th Question (Association Ruling)'''
+aisles=pd.read_csv("C:/Users/Sravani/Documents/ISB/Data Mining-1/Assignment_unsupervised learning/MB/aisles.csv/aisles.csv")
+aisles.head()
+orders=pd.read_csv("C:/Users/Sravani/Documents/ISB/Data Mining-1/Assignment_unsupervised learning/MB/order_products__train.csv/order_products__train.csv")
+order_products__train.head()
+products=pd.read_csv("C:/Users/Sravani/Documents/ISB/Data Mining-1/Assignment_unsupervised learning/MB/products.csv/products.csv")
+products.head()
+
+display(orders.head())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
